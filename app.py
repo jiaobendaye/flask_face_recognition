@@ -99,7 +99,7 @@ def recognition():
             response['debug'] = 'get json'
         if received_image:
             image = np.array(Image.open(BytesIO(image)))
-            result =  _recognition(image)
+            result =  _recognition_svm(image)
             if result is not 'unk':
                 response['prediction'] = result
             response['success'] = True
@@ -141,14 +141,14 @@ def _recognition(img):
     with graph.as_default():
         set_session(session)
         embedding = nn4_small2.predict(np.expand_dims(img, axis=0))
-        all_distance = [distance(embedding, emb) for emb in embedded]
-        min_dis =min(all_distance)
-        print(min_dis)
-        if min_dis > THRESHOLD:
-            return 'unk'
-        else:
-            min_index = np.argmin(all_distance)
-            return targets[min_index]
+    all_distance = [distance(embedding, emb) for emb in embedded]
+    min_dis =min(all_distance)
+    # print(min_dis)
+    if min_dis > THRESHOLD:
+        return 'unk'
+    else:
+        min_index = np.argmin(all_distance)
+        return targets[min_index]
 
 
 from sklearn.svm import LinearSVC
@@ -178,14 +178,14 @@ def _recognition_svm(img):
     with graph.as_default():
         set_session(session)
         embedding = nn4_small2.predict(np.expand_dims(img, axis=0))
-        prediction = svc.predict(embedding)
-        identity = encoder.inverse_transform(prediction)[0]
-        # enbedded_identity ,is the embeddings in the dataset which name is identity
-        embedded_identity = embedded[np.where(targets == identity)[0]]
-        all_distance = [distance(embedding, emb) for emb in embedded_identity]
-        min_dis =min(all_distance)
-        # print(min_dis)
-        if min_dis > THRESHOLD:
-            return 'unk'
-        else:
-            return identity
+    prediction = svc.predict(embedding)
+    identity = encoder.inverse_transform(prediction)[0]
+    # enbedded_identity ,is the embeddings in the dataset which name is identity
+    embedded_identity = embedded[np.where(targets == identity)[0]]
+    all_distance = [distance(embedding, emb) for emb in embedded_identity]
+    min_dis =min(all_distance)
+    # print(min_dis)
+    if min_dis > THRESHOLD:
+        return 'unk'
+    else:
+        return identity
