@@ -1,6 +1,6 @@
 # usage:
 
-zeros:
+zero:
 	download the model  [nn4_small2.h5](https://www.jianguoyun.com/p/DaTZKmwQno3qBxinvIMC) and [shape_predictor_68_face_landmarks.dat](https://www.jianguoyun.com/p/DbNGwpoQno3qBxj8u4MC), put them on ./model
 
 first: 
