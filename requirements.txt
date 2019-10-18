@@ -1,0 +1,8 @@
+dlib
+opencv
+numpy
+tensorflow
+sklearn
+matplotlib
+flask
+pillow

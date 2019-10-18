@@ -1,3 +1,5 @@
+model/nn4_small2.h5
+model/shape_predictor_68_face_landmarks.dat
 __pycache__
 asian
 9ee595d66b62f081bc1d8c7090a0c902
