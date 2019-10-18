@@ -9,7 +9,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 from PIL import Image
-from model import create_model
 from align import AlignDlib
 import cv2
 
@@ -29,7 +28,7 @@ LANDMARKER_FILE = './model/shape_predictor_68_face_landmarks.dat'
 global graph, nn4_small2
 graph = tf.get_default_graph() 
 set_session(session)
-nn4_small2 = load_model(MODEL_FILE_H5)
+nn4_small2 = load_model(MODEL_FILE_H5, custom_objects={'tf': tf})
 alignment = AlignDlib(LANDMARKER_FILE)
 
 

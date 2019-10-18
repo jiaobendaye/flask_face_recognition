@@ -1,13 +1,13 @@
 from sklearn.metrics import f1_score, accuracy_score
 import numpy as np
-from facerecognition import load_metadata
+from app import load_metadata
 import matplotlib.pyplot as plt
 
 IMAGE_DIR = './images/'
 metadata = load_metadata(IMAGE_DIR)
 distances = [] # squared L2 distance between pairs
 identical = [] # 1 if same identity, 0 otherwise
-embedded = np.load('emmbedded.npy')
+embedded = np.load('embedded.npy')
 
 def distance(emb1, emb2):
         return np.sum(np.square(emb1 - emb2))
@@ -23,7 +23,7 @@ for i in range(num - 1):
 distances = np.array(distances)
 identical = np.array(identical)
 
-thresholds = np.arange(0.3, 1.0, 0.01)
+thresholds = np.arange(0.2, 1.0, 0.01)
 
 f1_scores = [f1_score(identical, distances < t) for t in thresholds]
 acc_scores = [accuracy_score(identical, distances < t) for t in thresholds]
