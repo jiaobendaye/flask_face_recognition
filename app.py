@@ -150,4 +150,42 @@ def _recognition(img):
             min_index = np.argmin(all_distance)
             return targets[min_index]
 
- 
+
+from sklearn.svm import LinearSVC
+from sklearn.preprocessing import LabelEncoder
+
+encoder = LabelEncoder()
+encoder.fit(targets)
+y = encoder.transform(targets)
+
+svc = LinearSVC()
+svc.fit(embedded, y)
+
+def _recognition_svm(img):
+
+    """
+    return: result person name or unk
+    """
+    #preprocess
+    img = align_image(img)
+    if img is not None:
+    # 数据规范化
+        img = (img / 255.).astype(np.float32)
+    else: return 'unk'
+    # embedding
+    global session
+    global graph
+    with graph.as_default():
+        set_session(session)
+        embedding = nn4_small2.predict(np.expand_dims(img, axis=0))
+        prediction = svc.predict(embedding)
+        identity = encoder.inverse_transform(prediction)[0]
+        # enbedded_identity ,is the embeddings in the dataset which name is identity
+        embedded_identity = embedded[np.where(targets == identity)[0]]
+        all_distance = [distance(embedding, emb) for emb in embedded_identity]
+        min_dis =min(all_distance)
+        # print(min_dis)
+        if min_dis > THRESHOLD:
+            return 'unk'
+        else:
+            return identity
